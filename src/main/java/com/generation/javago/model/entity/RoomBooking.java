@@ -1,6 +1,7 @@
 package com.generation.javago.model.entity;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import lombok.Setter;
 public class RoomBooking extends BaseEntity
 {
 	private LocalDate checkin_date,checkout_date;
-	private Double price;
+	private Double price = getTotalPrice();
 	private Integer n_guest;
 	private boolean save;
 	
@@ -62,5 +63,52 @@ public class RoomBooking extends BaseEntity
 		return errors;
 	}
 	
+	public Double getTotalPrice()
+	{	
+		double[] costPerDay = new double[getDaysOfStay()]; 
+		
+		Double res = 0.0;
+		
+		for(int i = 0;i<costPerDay.length;i++ )
+		{
+			costPerDay[i] = calculateDayCost(i);
+		}
+
+		for(int i = 0;i<costPerDay.length;i++ )
+		{
+			res += costPerDay[i];
+		}
+		
+		return res;
+	}
+	
+	private Double calculateDayCost(int index) 
+	{
+		LocalDate currentDay = checkin_date.plusDays(index);
+		
+		for(Season season : seasons)
+		{
+			if	(
+					(currentDay.isAfter(season.getStartingDate()) || currentDay.isEqual(season.getStartingDate()))
+							&& 
+					(currentDay.isBefore(season.getEndDate()) || currentDay.isEqual(season.getEndDate()))
+				)
+			{
+				return room.getBasePrice()+room.getBasePrice()*(season.getPriceModifer()/100);
+			}
+		}
+		
+		return null;
+		
+	}
+
+	public Integer getDaysOfStay()
+	{
+		if(this.isValid())
+		{
+			return (int)ChronoUnit.DAYS.between(checkin_date, checkout_date);
+		}
+		return null;
+	}
 	
 }
