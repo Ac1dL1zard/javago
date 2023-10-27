@@ -28,7 +28,6 @@ import lombok.Setter;
 public class RoomBooking extends BaseEntity
 {
 	private LocalDate checkin_date,checkout_date;
-	private Double price = getTotalPrice();
 	private Integer n_guest;
 	private boolean save;
 	
@@ -57,8 +56,6 @@ public class RoomBooking extends BaseEntity
 			errors.add("Missing or invalid value for field 'checkin_date'");
 		if(checkout_date==null || checkout_date.isBefore(checkin_date))
 			errors.add("Missing or invalid value for field 'checkout_date'");
-		if(price==null || price<0)
-			errors.add("Missing or invalid value for field 'price'");
 		if(n_guest==null || n_guest<=0)
 			errors.add("Missing or invalid value for field 'indirizzo'");
 		
@@ -164,4 +161,5 @@ public class RoomBooking extends BaseEntity
 		
 		this.setSeasons(new ArrayList<Season>(bookingSeasons));
 	}
+	
 }
