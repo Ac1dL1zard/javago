@@ -13,6 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GenericSeasonDTO 
 {
+	
+	
 	protected Integer id;
 	protected String seasonName;
 	protected LocalDate startingDate;
