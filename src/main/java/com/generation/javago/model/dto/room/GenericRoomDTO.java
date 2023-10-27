@@ -3,14 +3,14 @@ package com.generation.javago.model.dto.room;
 import com.generation.javago.model.entity.Room;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class GenericRoomDTO
 {
 	protected int id;
