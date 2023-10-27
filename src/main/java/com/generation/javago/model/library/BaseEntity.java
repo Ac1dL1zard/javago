@@ -16,7 +16,7 @@ public abstract class BaseEntity
 {
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	protected int Id;
+	protected int id;
 	
 	public abstract List<String> getErrors();
 	
