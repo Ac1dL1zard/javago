@@ -3,7 +3,9 @@ package com.generation.javago.model.entity;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.generation.javago.model.library.BaseEntity;
 
@@ -63,28 +65,31 @@ public class RoomBooking extends BaseEntity
 		return errors;
 	}
 	
-	public Double getTotalPrice()
+	/*
+	 * This method let us calculate the total price of the booking
+	 * day by day, considering the various discounts/price increase, depending on 
+	 * the seasons of the days of the booking.
+	 */
+	public Double getTotalPrice() 
 	{	
-		double[] costPerDay = new double[getDaysOfStay()]; 
-		
 		Double res = 0.0;
 		
-		for(int i = 0;i<costPerDay.length;i++ )
+		for(int i = 0;i<getDaysOfStay();i++ )
 		{
-			costPerDay[i] = calculateDayCost(i);
+			res += calculateDayCost(i);
 		}
-
-		for(int i = 0;i<costPerDay.length;i++ )
-		{
-			res += costPerDay[i];
-		}
-		
 		return res;
 	}
 	
+	
+	/*
+	 * This method calculates the cost per day of the staying.
+	 */
 	private Double calculateDayCost(int index) 
 	{
 		LocalDate currentDay = checkin_date.plusDays(index);
+		
+		Double res = room.getBasePrice();
 		
 		for(Season season : seasons)
 		{
@@ -94,14 +99,17 @@ public class RoomBooking extends BaseEntity
 					(currentDay.isBefore(season.getEndDate()) || currentDay.isEqual(season.getEndDate()))
 				)
 			{
-				return room.getBasePrice()+room.getBasePrice()*(season.getPriceModifer()/100);
+				res += room.getBasePrice()*(season.getPriceModifer()/100.0);
 			}
 		}
 		
-		return null;
+		return res;
 		
 	}
 
+	/*
+	 * This method calculates the number of days between two dates
+	 */
 	public Integer getDaysOfStay()
 	{
 		if(this.isValid())
@@ -111,4 +119,49 @@ public class RoomBooking extends BaseEntity
 		return null;
 	}
 	
+	
+	/*
+	 * This method fills an array whith the date of every day of the stay
+	 */
+	public LocalDate[] daysOfStayWithDate() 
+	{
+		LocalDate[] datesOfStay = new LocalDate[getDaysOfStay()];
+		
+		for(int i=0; i<datesOfStay.length;i++)
+		{
+			datesOfStay[i] =  checkin_date.plusDays(i);
+		}
+		
+		return datesOfStay;
+	}
+	
+	/*
+	 * This method sets the seasons in which the booking is present
+	 */
+	public void setBookingSeasons(List<Season> allSeasons)
+	{
+		LocalDate[] days =  daysOfStayWithDate(); 
+		
+		Set<Season> bookingSeasons = new HashSet<Season>();
+		
+		for(Season season : allSeasons)
+		{
+			for(LocalDate day : days)
+			{
+				if	(
+						day.isEqual(season.getStartingDate()) 												|| 
+						(
+							day.isAfter(season.getStartingDate()) && day.isBefore(season.getEndDate())
+						) 																					||
+						day.isEqual(season.getEndDate())
+					)
+				{
+					bookingSeasons.add(season);
+				}
+				
+			}
+		}
+		
+		this.setSeasons(new ArrayList<Season>(bookingSeasons));
+	}
 }
