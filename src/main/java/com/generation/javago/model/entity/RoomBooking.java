@@ -71,7 +71,7 @@ public class RoomBooking extends BaseEntity
 	{	
 		Double res = 0.0;
 		
-		for(int i = 0;i<getDaysOfStay();i++ )
+		for(int i = 0;i<=getDaysOfStay();i++ )
 		{
 			res += calculateDayCost(i);
 		}
