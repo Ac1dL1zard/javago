@@ -20,9 +20,11 @@ import com.generation.javago.model.dto.roombooking.RoomBookingDTOOnlyRoom;
 import com.generation.javago.model.dto.roombooking.RoomBookingDTORoomCustomer;
 import com.generation.javago.model.dto.roombooking.RoomBookingGenericDTO;
 import com.generation.javago.model.entity.Customer;
+import com.generation.javago.model.entity.Room;
 import com.generation.javago.model.entity.RoomBooking;
 import com.generation.javago.model.repostiory.CustomerRepository;
 import com.generation.javago.model.repostiory.RoomBookingRepository;
+import com.generation.javago.model.repostiory.RoomRepository;
 import com.generation.javago.model.repostiory.SeasonRepository;
 
 @CrossOrigin
@@ -30,6 +32,8 @@ import com.generation.javago.model.repostiory.SeasonRepository;
 @RequestMapping("/api/")
 public class RoomBookingController
 {
+	@Autowired
+	RoomRepository roRepo; 
 	
 	@Autowired
 	RoomBookingRepository rbRepo;
@@ -63,15 +67,14 @@ public class RoomBookingController
 	@GetMapping("bookings/{id}")
 	public RoomBookingDTOFull getOneBooking(@PathVariable Integer id) 
 	{
-		Optional<RoomBooking> booking = rbRepo.findById(id);
-		if(booking.isEmpty())
+		if(rbRepo.findById(id).isEmpty())
 			throw new NoSuchElementException("Non ho trovato nessun elemento con quell'id");
 		
-		return new RoomBookingDTOFull(booking.get());	
+		return new RoomBookingDTOFull(rbRepo.findById(id).get());	
 	}
 	
-	@PostMapping("bookings/{id}")
-	public RoomBookingDTOFull insert(@RequestBody RoomBookingDTOOnlyRoom dto,@PathVariable Integer idCus)
+	@PostMapping("bookings/customers/{idCus}/rooms/{idRoom}")
+	public RoomBookingDTOFull insert(@RequestBody RoomBookingGenericDTO dto,@PathVariable Integer idCus, @PathVariable Integer idRoom)
 	{
 		Optional<Customer> c = cuRepo.findById(idCus);
 		if(c.isEmpty())
@@ -79,13 +82,26 @@ public class RoomBookingController
 		
 		Customer customer = c.get();
 		
+		if(roRepo.findById(idRoom).isEmpty())
+			throw new NoSuchElementException("Non ho trovato nessun elemento con quell'id");
+		Room room= roRepo.findById(idRoom).get(); 
+		
+	
 		RoomBooking booking = dto.convertToRoomBooking();		
+		
+		booking.setRoom(room); 
 		
 		booking.setCustomer(customer);
 		
 		booking.setBookingSeasons(seRepo.findAll());
 		
-		return new RoomBookingDTOFull(rbRepo.save(booking));
+		booking.setPrice(); 
+		
+		RoomBookingDTOFull res= new RoomBookingDTOFull(rbRepo.save(booking)); 
+				
+		
+		
+		return res;
 		
 	}
 	
@@ -98,7 +114,7 @@ public class RoomBookingController
 		
 		RoomBooking booking = bo.get();
 		
-		booking.setSave(true);
+		booking.setSaved(true);
 		
 		return new RoomBookingDTOOnlyRoom(rbRepo.save(booking));
 	}
