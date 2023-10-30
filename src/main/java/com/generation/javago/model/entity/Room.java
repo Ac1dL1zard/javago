@@ -7,9 +7,6 @@ import com.generation.javago.model.library.BaseEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,15 +19,15 @@ import lombok.Setter;
 @Entity
 public class Room extends BaseEntity
 {
-
-	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)
-	
+	private String img_url; 
 	private String name;
-	private String imgUrl;
 	private Integer capacity;
 	private Double basePrice;
 	private String notes;
+	
+	
+	@OneToMany(mappedBy="room", fetch = FetchType.EAGER)
+	private List<Photo> photos; 
 	
 	@OneToMany(mappedBy="room", fetch = FetchType.EAGER)
 	private List<RoomBooking> bookings;

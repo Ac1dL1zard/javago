@@ -8,36 +8,29 @@ import com.generation.javago.model.library.BaseEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-@Data
+import lombok.Setter;
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 public class Season extends BaseEntity
 {
-	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	
-//	id int primary key auto_increment,
-//    season_name varchar(100),
-//    starting_date date,
-//    end_date date,
-//    price_modifer int
 	
 	private String seasonName;
 	private LocalDate startingDate;
 	private LocalDate endDate;
 	private Integer priceModifer;
 	
-	@ManyToMany(mappedBy = "bookingsBySeasons", fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "seasons", fetch = FetchType.EAGER)
 	private List<RoomBooking> bookingsBySeasons;
 	
 	

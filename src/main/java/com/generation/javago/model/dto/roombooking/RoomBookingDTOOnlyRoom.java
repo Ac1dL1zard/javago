@@ -24,7 +24,7 @@ public class RoomBookingDTOOnlyRoom extends RoomBookingGenericDTO
 	{
 		RoomBooking booking = super.convertToRoomBooking();
 		
-		booking.setRoom(room.ConvertToRoom());
+		booking.setRoom(room.convertToRoom());
 		
 		return booking;
 	}

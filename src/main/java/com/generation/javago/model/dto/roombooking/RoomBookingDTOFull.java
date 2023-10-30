@@ -35,7 +35,7 @@ public class RoomBookingDTOFull extends RoomBookingGenericDTO
 		RoomBooking booking = super.convertToRoomBooking();
 		
 		booking.setCustomer(customer.convertToCustomer());
-		booking.setRoom(room.ConvertToRoom());
+		booking.setRoom(room.convertToRoom());
 		List<Season> converted = seasons
 				.stream()
 				.map(seasonDTO -> seasonDTO.convertToSeason())
