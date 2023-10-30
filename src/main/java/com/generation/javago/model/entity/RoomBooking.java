@@ -29,7 +29,7 @@ public class RoomBooking extends BaseEntity
 {
 	private LocalDate checkin_date,checkout_date;
 	private Integer n_guest;
-	private boolean save;
+	private boolean saved;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "customer_id")
