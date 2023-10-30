@@ -8,25 +8,31 @@ import com.generation.javago.model.dto.season.GenericSeasonDTO;
 import com.generation.javago.model.entity.RoomBooking;
 import com.generation.javago.model.entity.Season;
 
+import lombok.Getter;
+import lombok.Setter;
+
+
+@Getter
+@Setter
 public class RoomBookingDTOFull extends RoomBookingGenericDTO
 {
-	GenericCustomerDTO customer;
+	GenericCustomerDTO customerDTO;
 	
-	GenericRoomDTO room;
+	GenericRoomDTO roomDTO;
 	
-	List<GenericSeasonDTO> seasons;
+	List<GenericSeasonDTO> seasonsDTO;
 	
 
 	
 	public RoomBookingDTOFull(RoomBooking booking)
 	{
 		super(booking);
-		this.customer = new GenericCustomerDTO(booking.getCustomer());
-		this.seasons = booking.getSeasons()
+		this.customerDTO = new GenericCustomerDTO(booking.getCustomer());
+		this.seasonsDTO = booking.getSeasons()
 				.stream()
 				.map(season -> new GenericSeasonDTO(season))
 				.toList();
-		this.room = new GenericRoomDTO(booking.getRoom());
+		this.roomDTO = new GenericRoomDTO(booking.getRoom());
 	}
 	
 	@Override
@@ -34,9 +40,9 @@ public class RoomBookingDTOFull extends RoomBookingGenericDTO
 	{
 		RoomBooking booking = super.convertToRoomBooking();
 		
-		booking.setCustomer(customer.convertToCustomer());
-		booking.setRoom(room.convertToRoom());
-		List<Season> converted = seasons
+		booking.setCustomer(customerDTO.convertToCustomer());
+		booking.setRoom(roomDTO.convertToRoom());
+		List<Season> converted = seasonsDTO
 				.stream()
 				.map(seasonDTO -> seasonDTO.convertToSeason())
 				.toList();

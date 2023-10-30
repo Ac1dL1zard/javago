@@ -19,6 +19,7 @@ public class RoomBookingGenericDTO
 	protected LocalDate checkin_date,checkout_date;
 	protected Integer n_guest;
 	protected boolean saved;
+	protected Double price; 
 	
 	public RoomBookingGenericDTO(RoomBooking booking)
 	{
@@ -27,6 +28,7 @@ public class RoomBookingGenericDTO
 		this.checkout_date = booking.getCheckout_date();
 		this.n_guest = booking.getN_guest();
 		this.saved = booking.isSaved();
+		this.price = booking.getPrice(); 
 	}
 	
 	public RoomBooking convertToRoomBooking()
@@ -38,6 +40,7 @@ public class RoomBookingGenericDTO
 		booking.setCheckout_date(checkout_date);
 		booking.setN_guest(n_guest);
 		booking.setSaved(saved);
+		booking.setPrice(price);
 		
 		return booking;
 	}

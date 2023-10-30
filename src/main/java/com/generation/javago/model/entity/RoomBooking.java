@@ -15,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,9 @@ public class RoomBooking extends BaseEntity
 	private LocalDate checkin_date,checkout_date;
 	private Integer n_guest;
 	private boolean saved;
+	
+	@Getter(AccessLevel.NONE)
+    private Double price;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "customer_id")
@@ -47,6 +51,8 @@ public class RoomBooking extends BaseEntity
 		inverseJoinColumns = @JoinColumn(name = "id_season")
 	)
 	private List<Season> seasons;
+
+	
 
 	@Override
 	public List<String> getErrors() {
@@ -67,7 +73,7 @@ public class RoomBooking extends BaseEntity
 	 * day by day, considering the various discounts/price increase, depending on 
 	 * the seasons of the days of the booking.
 	 */
-	public Double getTotalPrice() 
+	public Double getPrice() 
 	{	
 		Double res = 0.0;
 		
@@ -78,6 +84,10 @@ public class RoomBooking extends BaseEntity
 		return res;
 	}
 	
+	public void setPrice()
+	{
+		this.price=this.getPrice(); 
+	}
 	
 	/*
 	 * This method calculates the cost per day of the staying.

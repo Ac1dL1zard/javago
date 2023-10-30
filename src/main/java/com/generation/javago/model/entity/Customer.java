@@ -31,7 +31,7 @@ public class Customer extends BaseEntity
 	
 
 	@ManyToOne(fetch = FetchType.EAGER)   // Collegamento tra gli ordini(Many) e il cliente(One)
-	@JoinColumn(name="id_user")         // Collega l'ordine al cliente tramite l'id preso dal db
+	@JoinColumn(name="user_id")         // Collega l'ordine al cliente tramite l'id preso dal db
 	User user; 
 	
 	
