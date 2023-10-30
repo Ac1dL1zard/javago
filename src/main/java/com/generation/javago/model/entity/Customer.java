@@ -4,14 +4,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import com.generation.javago.auth.model.UserInDb;
 import com.generation.javago.model.library.BaseEntity;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,7 @@ public class Customer extends BaseEntity
 
 	@ManyToOne(fetch = FetchType.EAGER)   // Collegamento tra gli ordini(Many) e il cliente(One)
 	@JoinColumn(name="user_id")         // Collega l'ordine al cliente tramite l'id preso dal db
-	User user; 
+	UserInDb user; 
 	
 	
 	

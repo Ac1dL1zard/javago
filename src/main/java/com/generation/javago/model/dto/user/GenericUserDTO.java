@@ -1,6 +1,6 @@
 package com.generation.javago.model.dto.user;
 
-import com.generation.javago.model.entity.User;
+import com.generation.javago.auth.model.UserInDb;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,30 +13,27 @@ public class GenericUserDTO {
 	
 	protected Integer id;
 
-	protected String email; 
+	protected String username; 
 	protected String password; 
-	protected Integer level; 
-	protected String img_url; 
+	protected boolean employed; 
 	
 	
 	public GenericUserDTO() {}
 	
-	public GenericUserDTO(User u) {
+	public GenericUserDTO(UserInDb u) {
 
 		this.id= u.getId();
-		this.email=u.getEmail(); 
+		this.username=u.getUsername(); 
 		this.password=u.getPassword(); 
-		this.level= u.getLevel(); 
-		this.img_url= u.getImg_url(); 
+		this.employed= u.isEmployed(); 
 	}
 	
-	public User convertToUser() {
-		User res=new User(); 
+	public UserInDb convertToUser() {
+		UserInDb res=new UserInDb(); 
 		res.setId(id);
-		res.setEmail(email);
+		res.setUsername(username);
 		res.setPassword(password);
-		res.setLevel(level);
-		res.setImg_url(img_url);
+		res.setEmployed(employed);
 		return res; 
 	}
 }
