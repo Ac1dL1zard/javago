@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.generation.javago.controller.util.InvalidEntityException;
+import com.generation.javago.model.dto.photo.GenericPhotoDTO;
 import com.generation.javago.model.dto.room.GenericRoomDTO;
 import com.generation.javago.model.dto.room.RoomDTOFull;
+import com.generation.javago.model.entity.Photo;
 import com.generation.javago.model.entity.Room;
+import com.generation.javago.model.repostiory.PhotoRepository;
 import com.generation.javago.model.repostiory.RoomRepository;
 
 @CrossOrigin
@@ -27,6 +30,8 @@ public class RoomController
 {
 	@Autowired
 	RoomRepository repo; 
+	
+	PhotoRepository repoPhoto; 
 	
 	
 	@GetMapping("rooms")
@@ -55,30 +60,60 @@ public class RoomController
 	
 	
 	@PutMapping("rooms/{id}")
-	public GenericRoomDTO update(@RequestBody GenericRoomDTO roomDTO, @PathVariable Integer id)
+	public RoomDTOFull update(@RequestBody RoomDTOFull roomDTO, @PathVariable Integer id)
 	{
 		if(repo.findById(id).isEmpty())
 			throw new NoSuchElementException("Room to update not found");
 		
-		Room room= roomDTO.ConvertToRoom(); 
+		Room room= roomDTO.convertToRoom(); 
 		
 		if(!room.isValid())
 			throw new InvalidEntityException("Updated room data invalid");
 		
 		room.setId(id); 
 		
-		return new GenericRoomDTO(repo.save(room)); 
+		return new RoomDTOFull(repo.save(room)); 
 	}
 	
 	@PostMapping("rooms")
-		public GenericRoomDTO insert(@RequestBody GenericRoomDTO roomDTO)
+		public RoomDTOFull insert(@RequestBody RoomDTOFull roomDTO)
 		{
-			Room toInsert= roomDTO.ConvertToRoom(); 
+			Room toInsert= roomDTO.convertToRoom(); 
 			if(!toInsert.isValid())
 				throw new InvalidEntityException("Invalid room data");
 			
-			return new GenericRoomDTO(repo.save(toInsert)); 
+			return new RoomDTOFull(repo.save(toInsert)); 
 		}
+	
+	
+	@PostMapping("rooms/{idRoom}/img")
+	public RoomDTOFull insertPhoto(@RequestBody GenericPhotoDTO photoDTO, @PathVariable Integer idRoom)
+	{
+		Room toInsert= repo.findById(idRoom).get(); 
+		if(repo.findById(idRoom).isEmpty())
+			throw new NoSuchElementException("Room not found");
+		Photo photo= photoDTO.convertToPhoto(); 
+		photo.setRoom(toInsert); 
+		toInsert.getPhotos().add(photo); 
+		return new RoomDTOFull(repo.save(toInsert)); 
+	}
+	
+	
+	
+	
+	@PostMapping("rooms/{idRoom}/img/{idImg}")
+	public void  deleteImg(@PathVariable Integer idRoom, @PathVariable Integer idImg)
+	{
+		if(repo.findById(idRoom).isEmpty())
+			throw new NoSuchElementException("Room to delete photo not found");
+		if(repoPhoto.findById(idImg).isEmpty())
+			throw new NoSuchElementException("Photo not found");
+		
+		Photo photo= repoPhoto.findById(idImg).get(); 
+		
+		repoPhoto.delete(photo); 
+	}
+	
 	
 		
 }

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.generation.javago.controller.util.InvalidEntityException;
 import com.generation.javago.model.dto.customer.CustomerDTOFULL;
-import com.generation.javago.model.dto.customer.CustomerDTOOnlyList;
 import com.generation.javago.model.dto.customer.CustomerDTOOnlyUser;
 import com.generation.javago.model.dto.customer.GenericCustomerDTO;
 import com.generation.javago.model.entity.Customer;
