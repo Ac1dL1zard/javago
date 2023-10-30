@@ -1,6 +1,5 @@
 package com.generation.javago.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -90,7 +89,7 @@ public class RoomBookingController
 		
 	}
 	
-	@PutMapping("bookings/{id}")
+	@PutMapping("bookings/{id}/confirm")
 	public RoomBookingDTOOnlyRoom confirmBooking(@PathVariable Integer id)
 	{
 		Optional<RoomBooking> bo = rbRepo.findById(id);
