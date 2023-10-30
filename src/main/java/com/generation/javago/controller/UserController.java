@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,12 +58,21 @@ public class UserController
 		
 		User user= userDTO.convertToUser(); 
 		
-		if(!user.isValid())
-			throw new InvalidEntityException("User season data invalid");
+		
 		
 		user.setId(id); 
 		
 		return new GenericUserDTO(repo.save(user)); 
+	}
+	
+	@PostMapping("users")
+	public GenericUserDTO insert(@RequestBody GenericUserDTO userDTO)
+	{
+		User toInsert= userDTO.convertToUser(); 
+		if(!toInsert.isValid())
+			throw new InvalidEntityException("Invalid user data");
+		
+		return new GenericUserDTO(repo.save(toInsert)); 
 	}
 
 }

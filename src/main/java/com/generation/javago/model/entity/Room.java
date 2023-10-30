@@ -23,8 +23,7 @@ import lombok.Setter;
 public class Room extends BaseEntity
 {
 
-	@Id
-	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	
 	
 	private String name;
 	private String imgUrl;
