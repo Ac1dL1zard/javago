@@ -28,7 +28,7 @@ public class RoomBookingDTORoomCustomer extends RoomBookingGenericDTO
 		RoomBooking booking = super.convertToRoomBooking();
 		
 		booking.setCustomer(customer.convertToCustomer());
-		booking.setRoom(room.ConvertToRoom());
+		booking.setRoom(room.convertToRoom());
 		
 		return booking;
 	}
