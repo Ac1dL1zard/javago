@@ -32,7 +32,7 @@ public class CustomerControllerTest
 	@Autowired
 	CustomerRepository cRepo;
 	
-	String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaWFvQGNpYW8uaXQiLCJleHAiOjE2OTg3Nzc5OTMsImlhdCI6MTY5ODc1OTk5M30.3bz4SYrdQEGYCmxQga1_2HGuycaPAK_Cljng26B3zjIpzWglO6IEYWR2eljVwMMMLjMaueP-lcEYXTROBE-_pw";
+	String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnaW5vQGdtYWlsLmNvbSIsImV4cCI6MTY5ODc4NDcyMywiaWF0IjoxNjk4NzY2NzIzfQ.dRaDm7I7xn6uvXbrbM1Lf6TWfX-hwFSVdwj9JnOsmGqDY8LcBGAM6QUAy8vRi9GpU24rrX9wX_krrJOtnaqnRg";
 	@Test
 	public void testGetAllCustomers() throws Exception 
 	{

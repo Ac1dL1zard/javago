@@ -60,7 +60,7 @@ public class RoomController
 	
 	
 	@PutMapping("rooms/{id}")
-	public RoomDTOFull update(@RequestBody RoomDTOFull roomDTO, @PathVariable Integer id)
+	public GenericRoomDTO update(@RequestBody GenericRoomDTO roomDTO, @PathVariable Integer id)
 	{
 		if(repo.findById(id).isEmpty())
 			throw new NoSuchElementException("Room to update not found");
@@ -72,17 +72,21 @@ public class RoomController
 		
 		room.setId(id); 
 		
-		return new RoomDTOFull(repo.save(room)); 
+		return new GenericRoomDTO(repo.save(room)); 
 	}
 	
 	@PostMapping("rooms")
-		public RoomDTOFull insert(@RequestBody RoomDTOFull roomDTO)
+		public GenericRoomDTO insert(@RequestBody GenericRoomDTO roomDTO)
 		{
 			Room toInsert= roomDTO.convertToRoom(); 
 			if(!toInsert.isValid())
 				throw new InvalidEntityException("Invalid room data");
 			
-			return new RoomDTOFull(repo.save(toInsert)); 
+		
+			
+	
+			return new GenericRoomDTO(repo.save(toInsert)); 
+			
 		}
 	
 	

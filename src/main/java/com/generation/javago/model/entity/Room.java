@@ -39,13 +39,13 @@ public class Room extends BaseEntity
 	{
 		List<String> errors = new ArrayList<>();
 	    
-		if (name==null)
+		if (name==null || name.isBlank())
 		{
 			errors.add("Missing or invalid value for field 'name");
 		}
-		if (capacity<=0)
+		if ( capacity == null || capacity<=0 )
 			errors.add("Missing or invalid value for field 'capacity");
-		if (basePrice<=0)
+		if (basePrice== null || basePrice<=0)
 			errors.add("Missing or invalid value for field 'basePrice");
 	    
 	    return errors;
