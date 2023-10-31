@@ -1,5 +1,6 @@
 package com.generation.javago.model.dto.room;
 
+import java.util.HashSet;
 import java.util.List;
 
 import com.generation.javago.model.dto.photo.GenericPhotoDTO;
@@ -54,14 +55,14 @@ public class RoomDTOFull extends GenericRoomDTO
 		
 		stanza.setPhotos
 			(
-					photoDTO.stream().map (phoDTO ->
-															{
-																Photo photo = phoDTO.convertToPhoto(); 
-																photo.setRoom(stanza); 
-																return photo; 
-															}
-					
-											).toList()
+				new HashSet<>(
+								photoDTO.stream().map (phoDTO ->
+									{
+										Photo photo = phoDTO.convertToPhoto(); 
+										photo.setRoom(stanza); 
+										return photo; 
+									}
+							).toList())			
 			);
 		return stanza;
 	}
