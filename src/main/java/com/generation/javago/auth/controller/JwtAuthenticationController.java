@@ -1,5 +1,6 @@
 package com.generation.javago.auth.controller;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import com.generation.javago.auth.model.JwtRequest;
 import com.generation.javago.auth.model.JwtResponse;
 import com.generation.javago.auth.model.UserInDb;
 import com.generation.javago.auth.service.UserRepository;
+import com.generation.javago.controller.util.InvalidEntityException;
 
 
 
@@ -57,9 +59,18 @@ public class JwtAuthenticationController {
 	
 	
 	@PostMapping("/register")
-	public ResponseEntity<?> register(@RequestBody UserInDb user)
+	public ResponseEntity<?> register(@RequestBody UserInDb user) throws Exception
 	{
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));//criptando la password
+		
+		if(!user.isValid())
+			throw new NoSuchElementException("One or more fields are invalid"+"\nErrors :\n"+user.getErrors());
+		
+		for(UserInDb u : repo.findAll())
+		{
+			if(u.getUsername() == user.getUsername())
+				throw new InvalidEntityException("Username already present in our database");
+		}
 		repo.save(user);
 		
 		UserDetails userDetails = jwtInMemoryUserDetailsService

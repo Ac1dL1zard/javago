@@ -50,7 +50,7 @@ public class Customer extends BaseEntity
 		if (surname==null)
 			errors.add("Missing or invalid value for field 'surname"); 
 		if (dob.isBefore(da) || dob.isAfter(LocalDate.now()) )	
-			errors.add("invalid value for field 'dob"); 
+			errors.add("invalid value for field 'dob");
 		return errors;
 	}
 

@@ -2,6 +2,7 @@ package com.generation.javago.model.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,7 +29,7 @@ public class Room extends BaseEntity
 	
 	
 	@OneToMany(mappedBy="room", fetch = FetchType.EAGER)
-	private List<Photo> photos; 
+	private Set<Photo> photos; 
 	
 	@OneToMany(mappedBy="room", fetch = FetchType.EAGER)
 	private List<RoomBooking> bookings;
