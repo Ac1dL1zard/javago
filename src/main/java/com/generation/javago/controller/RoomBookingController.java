@@ -1,5 +1,6 @@
 package com.generation.javago.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -42,35 +43,49 @@ public class RoomBookingController
 	@Autowired
 	SeasonRepository seRepo;
 	
-	@GetMapping("bookings")
-	public List<RoomBookingGenericDTO> getAll()
-	{
-		List<RoomBookingGenericDTO> bookingsDTO = rbRepo.findAll()
-			.stream()
-			.map(booking -> new RoomBookingGenericDTO(booking))
-			.toList();
-		
-		return bookingsDTO;
-	}
-	
-	@GetMapping("bookings/admin")
-	public List<RoomBookingDTORoomCustomer> getAllwCustomerAndRoom()
-	{
-		List<RoomBookingDTORoomCustomer> bookingsDTO = rbRepo.findAll()
-			.stream()
-			.map(booking -> new RoomBookingDTORoomCustomer(booking))
-			.toList();
-		
-		return bookingsDTO;
-	}
-	
 	@GetMapping("bookings/{id}")
-	public RoomBookingDTOFull getOneBooking(@PathVariable Integer id) 
+	public List<RoomBookingDTOFull> getAll(@PathVariable Integer id)
 	{
-		if(rbRepo.findById(id).isEmpty())
+		Customer current = cuRepo.findById(id).get();
+		
+		List<RoomBookingDTOFull> bookingsDTO = rbRepo.findAll()
+				.stream()
+				.map(booking -> new RoomBookingDTOFull(booking))
+				.toList();
+		
+		if(!current.getUser().isEmployed())
+		{
+			
+			
+			List<RoomBookingDTOFull> res = new ArrayList<RoomBookingDTOFull>();
+			
+			for(RoomBookingDTOFull customerBooking : bookingsDTO)
+			{
+				if(customerBooking.getCustomerDTO().convertToCustomer().getId() == id)
+					res.add(customerBooking);
+			}
+				return res;
+		}
+
+		return bookingsDTO;
+	}
+	
+	@GetMapping("bookings/{idBooking}/{idCustomer}")
+	public RoomBookingGenericDTO getOneBooking(@PathVariable Integer idBooking,@PathVariable Integer idCustomer) 
+	{
+		Customer current = cuRepo.findById(idCustomer).get();
+		
+		Optional<RoomBooking> bookingBox = rbRepo.findById(idBooking);
+		
+		RoomBooking booking = bookingBox.get();
+		
+		if(bookingBox.isEmpty())
 			throw new NoSuchElementException("Non ho trovato nessun elemento con quell'id");
 		
-		return new RoomBookingDTOFull(rbRepo.findById(id).get());	
+		if(!current.getUser().isEmployed())
+			return new RoomBookingDTOOnlyRoom(booking);	
+		
+		return new RoomBookingDTOFull(booking);
 	}
 	
 	@PostMapping("bookings/customers/{idCus}/rooms/{idRoom}")
