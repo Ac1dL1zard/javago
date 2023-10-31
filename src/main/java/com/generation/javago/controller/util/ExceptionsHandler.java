@@ -2,6 +2,7 @@ package com.generation.javago.controller.util;
 
 import java.util.NoSuchElementException;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,12 @@ public class ExceptionsHandler
 	public  ResponseEntity <String> handleHttpMessageNotReadableException(HttpMessageNotReadableException e)
 	{
 		return new ResponseEntity <>("Formato JSON non valido", HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public  ResponseEntity <String> handleDataIntegrityViolationException(DataIntegrityViolationException e)
+	{
+		return new ResponseEntity <>("Dati già esistenti", HttpStatus.NOT_ACCEPTABLE);
 	}
 
 
