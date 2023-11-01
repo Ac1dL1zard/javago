@@ -102,12 +102,12 @@ public class RoomBooking extends BaseEntity
 		for(Season season : seasons)
 		{
 			if	(
-					(currentDay.isAfter(season.getStartingDate()) || currentDay.isEqual(season.getStartingDate()))
+					(currentDay.isAfter(season.getStarting_date()) || currentDay.isEqual(season.getStarting_date()))
 							&& 
-					(currentDay.isBefore(season.getEndDate()) || currentDay.isEqual(season.getEndDate()))
+					(currentDay.isBefore(season.getEnd_date()) || currentDay.isEqual(season.getEnd_date()))
 				)
 			{
-				res += room.getBasePrice()*(season.getPriceModifer()/100.0);
+				res += room.getBasePrice()*(season.getPrice_modifer()/100.0);
 			}
 		}
 		
@@ -157,11 +157,11 @@ public class RoomBooking extends BaseEntity
 			for(LocalDate day : days)
 			{
 				if	(
-						day.isEqual(season.getStartingDate()) 												|| 
+						day.isEqual(season.getStarting_date()) 												|| 
 						(
-							day.isAfter(season.getStartingDate()) && day.isBefore(season.getEndDate())
+							day.isAfter(season.getStarting_date()) && day.isBefore(season.getEnd_date())
 						) 																					||
-						day.isEqual(season.getEndDate())
+						day.isEqual(season.getEnd_date())
 					)
 				{
 					bookingSeasons.add(season);

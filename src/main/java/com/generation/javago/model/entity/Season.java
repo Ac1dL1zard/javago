@@ -26,10 +26,10 @@ public class Season extends BaseEntity
 {
 	
 	
-	private String seasonName;
-	private LocalDate startingDate;
-	private LocalDate endDate;
-	private Integer priceModifer;
+	private String season_name;
+	private LocalDate starting_date;
+	private LocalDate end_date;
+	private Integer price_modifer;
 	
 	@ManyToMany(mappedBy = "seasons", fetch = FetchType.EAGER)
 	private List<RoomBooking> bookingsBySeasons;
@@ -44,20 +44,20 @@ public class Season extends BaseEntity
 	{
 		List<String> errors = new ArrayList<>();
 	    
-		if (seasonName==null)
+		if (season_name==null)
 			errors.add("Missing or invalid value for field 'seasonName");
-		if (startingDate == null) 
+		if (starting_date == null) 
 	        errors.add("Start date cannot be null.");
  
-	    if (endDate == null) 
+	    if (end_date == null) 
 	        errors.add("End date cannot be null.");
-	    if (startingDate != null && endDate != null) 
+	    if (starting_date != null && end_date != null) 
 	    {
-	        if (startingDate.isAfter(endDate)) 
+	        if (starting_date.isAfter(end_date)) 
 	            errors.add("Start date cannot be after the end date.");
 	    }
 	    
-	    if (priceModifer<0)
+	    if (price_modifer<0)
 	    	errors.add("Missing or invalid value for field priceModifer");
 		        
 		return errors;

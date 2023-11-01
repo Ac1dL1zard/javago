@@ -16,20 +16,20 @@ public class GenericSeasonDTO
 	
 	
 	protected Integer id;
-	protected String seasonName;
-	protected LocalDate startingDate;
-	protected LocalDate endDate;
-	protected Integer priceModifer;
+	protected String season_name;
+	protected LocalDate starting_date;
+	protected LocalDate end_date;
+	protected Integer price_modifer;
 	
 	public GenericSeasonDTO() {}
 	
 	public GenericSeasonDTO(Season season)
 	{
 		id = season.getId();
-		seasonName = season.getSeasonName();
-		startingDate = season.getStartingDate();
-		endDate = season.getEndDate();
-		priceModifer = season.getPriceModifer();
+		season_name = season.getSeason_name();
+		starting_date = season.getStarting_date();
+		end_date = season.getEnd_date();
+		price_modifer = season.getPrice_modifer();
 		
 	}
 	
@@ -37,10 +37,10 @@ public class GenericSeasonDTO
 	{
 		Season season = new Season();
 		season.setId(id);
-		season.setSeasonName(seasonName);
-		season.setStartingDate(startingDate);
-		season.setEndDate(endDate);
-		season.setPriceModifer(priceModifer);
+		season.setSeason_name(season_name);
+		season.setStarting_date(starting_date);
+		season.setEnd_date(end_date);
+		season.setPrice_modifer(price_modifer);
 		
 		return season;
 	}

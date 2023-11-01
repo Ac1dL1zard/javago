@@ -31,6 +31,7 @@ public class RoomController
 	@Autowired
 	RoomRepository repo; 
 	
+	@Autowired
 	PhotoRepository repoPhoto; 
 	
 	
@@ -91,21 +92,26 @@ public class RoomController
 	
 	
 	@PostMapping("rooms/{idRoom}/img")
-	public RoomDTOFull insertPhoto(@RequestBody GenericPhotoDTO photoDTO, @PathVariable Integer idRoom)
+	public GenericPhotoDTO insertPhoto(@RequestBody GenericPhotoDTO photoDTO, @PathVariable Integer idRoom)
 	{
 		Room toInsert= repo.findById(idRoom).get(); 
 		if(repo.findById(idRoom).isEmpty())
 			throw new NoSuchElementException("Room not found");
 		Photo photo= photoDTO.convertToPhoto(); 
+		if (!photo.isValid())
+			throw new InvalidEntityException("Invalid photo data");
 		photo.setRoom(toInsert); 
-		toInsert.getPhotos().add(photo); 
-		return new RoomDTOFull(repo.save(toInsert)); 
+		
+		toInsert.getPhotos().add(photo);
+
+		
+		return new GenericPhotoDTO(repoPhoto.save(photo)); 
 	}
 	
 	
 	
 	
-	@PostMapping("rooms/{idRoom}/img/{idImg}")
+	@DeleteMapping("rooms/{idRoom}/img/{idImg}")
 	public void  deleteImg(@PathVariable Integer idRoom, @PathVariable Integer idImg)
 	{
 		if(repo.findById(idRoom).isEmpty())

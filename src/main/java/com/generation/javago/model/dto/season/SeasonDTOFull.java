@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class SeasonDTOFull extends GenericSeasonDTO
 {
-	private List<RoomBookingGenericDTO> bookingsBySeasonsDTO;
+	private List<RoomBookingGenericDTO> bookingsDTO;
 	
 
 	public SeasonDTOFull() {}
@@ -23,14 +23,14 @@ public class SeasonDTOFull extends GenericSeasonDTO
         super(season);
 
         
-        bookingsBySeasonsDTO = season.getBookingsBySeasons().stream().map(bookingBySeason -> new RoomBookingGenericDTO(bookingBySeason)).toList();
+        bookingsDTO = season.getBookingsBySeasons().stream().map(bookingBySeason -> new RoomBookingGenericDTO(bookingBySeason)).toList();
     }
 
     @Override
     public Season convertToSeason()
     {
     	Season season = super.convertToSeason();
-    	season.setBookingsBySeasons(bookingsBySeasonsDTO.stream().map(RoomBookingDTO -> 
+    	season.setBookingsBySeasons(bookingsDTO.stream().map(RoomBookingDTO -> 
     						
     						{
     							RoomBooking roomBooking = RoomBookingDTO.convertToRoomBooking();
