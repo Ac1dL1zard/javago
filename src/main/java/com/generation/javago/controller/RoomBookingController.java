@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.generation.javago.auth.model.UserInDb;
 import com.generation.javago.auth.service.UserRepository;
 import com.generation.javago.controller.util.InvalidEntityException;
+import com.generation.javago.model.dto.room.GenericRoomDTO;
 import com.generation.javago.model.dto.roombooking.RoomBookingDTOFull;
 import com.generation.javago.model.dto.roombooking.RoomBookingDTOOnlyRoom;
 import com.generation.javago.model.dto.roombooking.RoomBookingGenericDTO;
@@ -48,28 +49,26 @@ public class RoomBookingController
 
 	
 	@GetMapping("bookings/user/{idUser}")
-	public List<RoomBookingDTOFull> getAll(@PathVariable Integer idUser)
+	public List<?> getAll(@PathVariable Integer idUser)
 	{
 		UserInDb current = usRepo.findById(idUser).get();
+		
+		
+		
+		if(!current.isEmployed())
+		{
+			List<RoomBookingGenericDTO> bookingsDTO = rbRepo.findAll()
+					.stream()
+					.map(booking -> new RoomBookingGenericDTO(booking))
+					.toList();
+			
+				return bookingsDTO ;
+		}
 		
 		List<RoomBookingDTOFull> bookingsDTO = rbRepo.findAll()
 				.stream()
 				.map(booking -> new RoomBookingDTOFull(booking))
 				.toList();
-		
-		if(!current.isEmployed())
-		{
-			
-			
-			List<RoomBookingDTOFull> res = new ArrayList<RoomBookingDTOFull>();
-			
-			for(RoomBookingDTOFull customerBooking : bookingsDTO)
-			{
-				if(customerBooking.getCustomerDTO().convertToCustomer().getId() == idUser)
-					res.add(customerBooking);
-			}
-				return res;
-		}
 
 		return bookingsDTO;
 	}
@@ -149,19 +148,38 @@ public class RoomBookingController
 	}
 	
 	@PutMapping("bookings/{id}")
-	public RoomBookingDTOOnlyRoom modifyBooking(@PathVariable Integer id, @RequestBody RoomBookingDTOOnlyRoom dto)
+	public RoomBookingGenericDTO modifyBooking(@PathVariable Integer id, @RequestBody RoomBookingGenericDTO dto)
 	{
 		Optional<RoomBooking> bo = rbRepo.findById(id);
 		if(bo.isEmpty())
 			throw new NoSuchElementException("Non ho trovato nessun elemento con quell'id");
 		
-		RoomBooking bookingToModify = bo.get();
+	
+		int idRoom= bo.get().getRoom().getId(); 
+		
+		Room room= roRepo.findById(idRoom).get(); 
+		
 		
 		RoomBooking modified = dto.convertToRoomBooking();
+		modified.setId(id); 
 		
-		bookingToModify = modified;
+	
+		if (!modified.isValid())
+			throw new InvalidEntityException("Invalid booking data");
+		modified.setSeasons(seRepo.findAll()); 
+		modified.setRoom(room); 
+		modified.setPrice(); 
+		List<RoomBooking> allBookings= rbRepo.findByRoom(room); 
+		allBookings.remove(bo.get()); 
 		
-		return new RoomBookingDTOOnlyRoom(rbRepo.save(bookingToModify));
+		for(RoomBooking bookingDB : allBookings) {
+			if(modified.isBooked(bookingDB.getDaysOfBookings()))
+				throw new InvalidEntityException("Date NON valide, questa stanza e già prenotata nei giorni inseriti");
+		}
+		
+		
+		
+		return new RoomBookingGenericDTO(rbRepo.save(modified));
 	}
 	
 	@DeleteMapping("bookings/{id}")

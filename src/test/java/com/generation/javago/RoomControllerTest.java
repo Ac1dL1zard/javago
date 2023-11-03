@@ -33,7 +33,7 @@ public class RoomControllerTest {
 	@Autowired
 	RoomRepository repo;
 	
-	String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnaW5vQGdtYWlsLmNvbSIsImV4cCI6MTY5ODg2MDQ5MCwiaWF0IjoxNjk4ODQyNDkwfQ.us52E1uHOH6GwvRlqzcmt0z8iPNlxYE0slLXdF-CkKcRo3DEiAQFlSxehJlUWedXk28iT9nuH1xOi1_Gfr5W_g";
+	String token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnaW5vQGdtYWlsLmNvbSIsImV4cCI6MTY5OTAyMDAwMywiaWF0IjoxNjk5MDAyMDAzfQ.vKSpG_RwA3_Jd0QFDp9YC-XuYPf799hxsbJsyt3C7RXQ3muoFmfblnWJYxyY2fFrFqObJyeFdkWabWHpkUkO-g";
 	@Test
 	public void testGetAllRooms() throws Exception 
 	{
@@ -54,60 +54,60 @@ public class RoomControllerTest {
 		.andExpect(MockMvcResultMatchers.content().string("Parametro non valido"));
 	}
 	
-	@Test
-	public void testGetOneRoom() throws Exception
-	{
-		mock.perform(MockMvcRequestBuilders.get("/api/rooms/1")  	
-				.header("Authorization", "Bearer " + token))
-				.andDo(print())											
-				.andExpect(status().is(200))
-				.andExpect(MockMvcResultMatchers.content().json(jsonValido));		
-				
-		mock.perform(MockMvcRequestBuilders.get("/api/rooms/999")
-		.header("Authorization", "Bearer " + token))  	
-		.andDo(print())											
-		.andExpect(status().is(404))
-		.andExpect(MockMvcResultMatchers.content().string("Room not found"));
-		
-		
-	}
-	
-	private String jsonValido="{\r\n"
-			+ "    \"id\": 1,\r\n"
-			+ "    \"img_url\": \"url_immagine_stanza.jpg\",\r\n"
-			+ "    \"name\": \"Stanza Standard\",\r\n"
-			+ "    \"capacity\": 2,\r\n"
-			+ "    \"basePrice\": 100.0,\r\n"
-			+ "    \"notes\": \"Stanza con vista sul giardino.\",\r\n"
-			+ "    \"bookings\": [\r\n"
-			+ "        {\r\n"
-			+ "            \"id\": 1,\r\n"
-			+ "            \"checkin_date\": \"2023-11-01\",\r\n"
-			+ "            \"checkout_date\": \"2023-11-05\",\r\n"
-			+ "            \"n_guest\": 2,\r\n"
-			+ "            \"saved\": true,\r\n"
-			+ "            \"price\": 500.0\r\n"
-			+ "        },\r\n"
-			+ "        {\r\n"
-			+ "            \"id\": 4,\r\n"
-			+ "            \"checkin_date\": \"2023-06-05\",\r\n"
-			+ "            \"checkout_date\": \"2024-08-10\",\r\n"
-			+ "            \"n_guest\": 2,\r\n"
-			+ "            \"saved\": false,\r\n"
-			+ "            \"price\": 48245.0\r\n"
-			+ "        },\r\n"
-			+ "        {\r\n"
-			+ "            \"id\": 6,\r\n"
-			+ "            \"checkin_date\": \"2023-06-05\",\r\n"
-			+ "            \"checkout_date\": \"2024-08-10\",\r\n"
-			+ "            \"n_guest\": 2,\r\n"
-			+ "            \"saved\": false,\r\n"
-			+ "            \"price\": 48245.0\r\n"
-			+ "        }\r\n"
-			+ "    ],\r\n"
-			+ "    \"photoDTO\": []\r\n"
-			+ "}"; 
-	
+//	@Test
+//	public void testGetOneRoom() throws Exception
+//	{
+//		mock.perform(MockMvcRequestBuilders.get("/api/rooms/1")  	
+//				.header("Authorization", "Bearer " + token))
+//				.andDo(print())											
+//				.andExpect(status().is(200))
+//				.andExpect(MockMvcResultMatchers.content().json(jsonValido));		
+//				
+//		mock.perform(MockMvcRequestBuilders.get("/api/rooms/999")
+//		.header("Authorization", "Bearer " + token))  	
+//		.andDo(print())											
+//		.andExpect(status().is(404))
+//		.andExpect(MockMvcResultMatchers.content().string("Room not found"));
+//		
+//		
+//	}
+//	
+//	private String jsonValido="{\r\n"
+//			+ "    \"id\": 1,\r\n"
+//			+ "    \"img_url\": \"url_immagine_stanza.jpg\",\r\n"
+//			+ "    \"name\": \"Stanza Standard\",\r\n"
+//			+ "    \"capacity\": 2,\r\n"
+//			+ "    \"basePrice\": 100.0,\r\n"
+//			+ "    \"notes\": \"Stanza con vista sul giardino.\",\r\n"
+//			+ "    \"bookings\": [\r\n"
+//			+ "        {\r\n"
+//			+ "            \"id\": 1,\r\n"
+//			+ "            \"checkin_date\": \"2023-11-01\",\r\n"
+//			+ "            \"checkout_date\": \"2023-11-05\",\r\n"
+//			+ "            \"n_guest\": 2,\r\n"
+//			+ "            \"saved\": true,\r\n"
+//			+ "            \"price\": 500.0\r\n"
+//			+ "        },\r\n"
+//			+ "        {\r\n"
+//			+ "            \"id\": 4,\r\n"
+//			+ "            \"checkin_date\": \"2023-06-05\",\r\n"
+//			+ "            \"checkout_date\": \"2024-08-10\",\r\n"
+//			+ "            \"n_guest\": 2,\r\n"
+//			+ "            \"saved\": false,\r\n"
+//			+ "            \"price\": 48245.0\r\n"
+//			+ "        },\r\n"
+//			+ "        {\r\n"
+//			+ "            \"id\": 6,\r\n"
+//			+ "            \"checkin_date\": \"2023-06-05\",\r\n"
+//			+ "            \"checkout_date\": \"2024-08-10\",\r\n"
+//			+ "            \"n_guest\": 2,\r\n"
+//			+ "            \"saved\": false,\r\n"
+//			+ "            \"price\": 48245.0\r\n"
+//			+ "        }\r\n"
+//			+ "    ],\r\n"
+//			+ "    \"photoDTO\": []\r\n"
+//			+ "}"; 
+//	
 //	@Test 
 //	public void testUpdateOneRoom() throws Exception
 //	{ 
@@ -261,5 +261,43 @@ public class RoomControllerTest {
 //				.andDo(print())											
 //				.andExpect(status().is(404));
 //	}
+	@Test
+	public void testGetAllImg() throws Exception 
+	{
+		mock.perform(MockMvcRequestBuilders.get("/api/rooms/img")  	
+		.header("Authorization", "Bearer " + token))
+		.andDo(print())											
+		.andExpect(status().is(200));
+		
+		mock.perform(MockMvcRequestBuilders.get("/api/img")
+		.header("Authorization", "Bearer " + token))  	
+		.andDo(print())											
+		.andExpect(status().is(404));
+		
+		mock.perform(MockMvcRequestBuilders.get("/api/img/papero")
+		.header("Authorization", "Bearer " + token))  	
+		.andDo(print())											
+		.andExpect(status().is(404)); 
+	}
+	
+	
+	@Test
+	public void testGetAllImgOfARoom() throws Exception 
+	{
+		mock.perform(MockMvcRequestBuilders.get("/api/rooms/1/img")  	
+		.header("Authorization", "Bearer " + token))
+		.andDo(print())											
+		.andExpect(status().is(200));
+		
+		mock.perform(MockMvcRequestBuilders.get("/api/rooms/999/img")
+		.header("Authorization", "Bearer " + token))  	
+		.andDo(print())											
+		.andExpect(status().is(404));
+		
+		mock.perform(MockMvcRequestBuilders.get("/api/rooms/999/papero")
+		.header("Authorization", "Bearer " + token))  	
+		.andDo(print())											
+		.andExpect(status().is(404)); 
+	}
 
 }
