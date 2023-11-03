@@ -1,5 +1,7 @@
 package com.generation.javago.auth.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -53,8 +55,10 @@ public class JwtAuthenticationController {
 				.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
-
-		return ResponseEntity.ok(new JwtResponse(token));
+		
+		final Integer user_id = repo.findByUsername(authenticationRequest.getUsername()).get().getId();
+		
+		return ResponseEntity.ok(new JwtResponse(token,user_id)) ;
 	}
 	
 	
@@ -77,7 +81,7 @@ public class JwtAuthenticationController {
 				.loadUserByUsername(user.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
-		return ResponseEntity.ok(new JwtResponse(token));
+		return ResponseEntity.ok(new JwtResponse(token,user.getId()));
 	}
 
 	private void authenticate(String username, String password) throws Exception {
