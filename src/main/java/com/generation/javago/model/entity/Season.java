@@ -57,7 +57,7 @@ public class Season extends BaseEntity
 	            errors.add("Start date cannot be after the end date.");
 	    }
 	    
-	    if (price_modifer<0)
+	    if (price_modifer== null)
 	    	errors.add("Missing or invalid value for field priceModifer");
 		        
 		return errors;

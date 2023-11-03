@@ -15,7 +15,7 @@ public class GenericSeasonDTO
 {
 	
 	
-	protected Integer id;
+	protected int id;
 	protected String season_name;
 	protected LocalDate starting_date;
 	protected LocalDate end_date;

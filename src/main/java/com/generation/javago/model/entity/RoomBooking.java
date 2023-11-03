@@ -64,7 +64,7 @@ public class RoomBooking extends BaseEntity
 		if(checkout_date==null || checkout_date.isBefore(checkin_date))
 			errors.add("Missing or invalid value for field 'checkout_date'");
 		if(n_guest==null || n_guest<=0)
-			errors.add("Missing or invalid value for field 'indirizzo'");
+			errors.add("Missing or invalid value for field 'n_guest'");
 		
 		return errors;
 	}
@@ -173,4 +173,26 @@ public class RoomBooking extends BaseEntity
 		this.setSeasons(new ArrayList<Season>(bookingSeasons));
 	}
 	
+	
+	
+	public List<LocalDate> getDaysOfBookings(){
+		List<LocalDate> datesOfStay = new 	ArrayList<LocalDate>();
+		
+		for(int i=0; i<=getDaysOfStay();i++)
+		{
+			datesOfStay.add(checkin_date.plusDays(i)); 
+		}
+		
+		return datesOfStay;
+	}
+	
+	public boolean isBooked(List<LocalDate> lista) {
+		for (LocalDate data : getDaysOfBookings()) {
+            if (lista.contains(data)) {
+                return true; // Trovata una data in comune
+            }
+        }
+        return false;
+		
+	}
 }
