@@ -189,22 +189,22 @@ public class RoomBookingControllerTest
 //	}
 	
 //	@Test
-//	public void testDeleteBooking() throws Exception
-//	{
-//		mock.perform(MockMvcRequestBuilders.delete("/api/bookings/12")  	
-//		.header("Authorization", "Bearer " + token))
-//		.andDo(print())											
-//		.andExpect(status().is(200));
-//		
-//		mock.perform(MockMvcRequestBuilders.delete("/api/bookings/999")  	
-//				.header("Authorization", "Bearer " + token))
-//				.andDo(print())											
-//				.andExpect(status().is(404));
-//		
-//		mock.perform(MockMvcRequestBuilders.delete("/api/bookingss/1")  	
-//				.header("Authorization", "Bearer " + token))
-//				.andDo(print())											
-//				.andExpect(status().is(404));
-//	}
+	public void testDeleteBooking() throws Exception
+	{
+		mock.perform(MockMvcRequestBuilders.delete("/api/bookings/12")  	
+		.header("Authorization", "Bearer " + token))
+		.andDo(print())											
+		.andExpect(status().is(200));
+		
+		mock.perform(MockMvcRequestBuilders.delete("/api/bookings/999")  	
+				.header("Authorization", "Bearer " + token))
+				.andDo(print())											
+				.andExpect(status().is(404));
+		
+		mock.perform(MockMvcRequestBuilders.delete("/api/bookingss/1")  	
+				.header("Authorization", "Bearer " + token))
+				.andDo(print())											
+				.andExpect(status().is(404));
+	}
 
 }
