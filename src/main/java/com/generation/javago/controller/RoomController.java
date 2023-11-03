@@ -1,9 +1,12 @@
 package com.generation.javago.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.generation.javago.auth.service.UserRepository;
 import com.generation.javago.controller.util.InvalidEntityException;
 import com.generation.javago.model.dto.photo.GenericPhotoDTO;
 import com.generation.javago.model.dto.room.GenericRoomDTO;
@@ -34,7 +38,10 @@ public class RoomController
 	RoomRepository repo; 
 	
 	@Autowired
-	PhotoRepository repoPhoto; 
+	PhotoRepository repoPhoto;
+	
+	@Autowired
+	UserRepository repoUser; 
 	
 	
 	@GetMapping("rooms")
@@ -51,9 +58,14 @@ public class RoomController
 	}
 	
 	
-	@DeleteMapping("rooms/{id}")
-	public void delete(@PathVariable Integer id)
+	@DeleteMapping("rooms/{id}/users/{idUser}")
+	public void delete(@PathVariable Integer id, @PathVariable Integer idUser, HttpServletResponse response) throws IOException
 	{
+		if (!repoUser.findById(idUser).get().isEmployed()) {
+			 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+			 return; 
+		}
+		
 		if(repo.findById(id).isEmpty())
 			throw new NoSuchElementException("Room to delete not found");
 		Room room= repo.findById(id).get(); 
@@ -62,9 +74,14 @@ public class RoomController
 	
 	
 	
-	@PutMapping("rooms/{id}")
-	public GenericRoomDTO update(@RequestBody GenericRoomDTO roomDTO, @PathVariable Integer id)
+	@PutMapping("rooms/{id}/users/{idUser}")
+	public GenericRoomDTO update(@RequestBody GenericRoomDTO roomDTO,
+			@PathVariable Integer idUser, @PathVariable Integer id, HttpServletResponse response) throws IOException
 	{
+		if (!repoUser.findById(idUser).get().isEmployed()) {
+			 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+			 return null; 
+		}
 		if(repo.findById(id).isEmpty())
 			throw new NoSuchElementException("Room to update not found");
 		
@@ -78,24 +95,31 @@ public class RoomController
 		return new GenericRoomDTO(repo.save(room)); 
 	}
 	
-	@PostMapping("rooms")
-		public GenericRoomDTO insert(@RequestBody GenericRoomDTO roomDTO)
+	@PostMapping("rooms/users/{idUser}")
+		public GenericRoomDTO insert(@RequestBody GenericRoomDTO roomDTO
+				, HttpServletResponse response,@PathVariable Integer idUser) throws IOException
 		{
+			if (!repoUser.findById(idUser).get().isEmployed()) {
+				 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+				 return null; 
+			}
 			Room toInsert= roomDTO.convertToRoom(); 
 			if(!toInsert.isValid())
 				throw new InvalidEntityException("Invalid room data");
 			
-		
-			
-	
 			return new GenericRoomDTO(repo.save(toInsert)); 
 			
 		}
 	
 	
-	@PostMapping("rooms/{idRoom}/img")
-	public GenericPhotoDTO insertPhoto(@RequestBody GenericPhotoDTO photoDTO, @PathVariable Integer idRoom)
+	@PostMapping("rooms/{idRoom}/img/users/{idUser}")
+	public GenericPhotoDTO insertPhoto(@RequestBody GenericPhotoDTO photoDTO, @PathVariable Integer idRoom
+			, HttpServletResponse response,@PathVariable Integer idUser) throws IOException
 	{
+		if (!repoUser.findById(idUser).get().isEmployed()) {
+			 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+			 return null; 
+		}
 		Room toInsert= repo.findById(idRoom).get(); 
 		if(repo.findById(idRoom).isEmpty())
 			throw new NoSuchElementException("Room not found");
@@ -113,9 +137,14 @@ public class RoomController
 	
 	
 	
-	@DeleteMapping("rooms/{idRoom}/img/{idImg}")
-	public void  deleteImg(@PathVariable Integer idRoom, @PathVariable Integer idImg)
+	@DeleteMapping("rooms/{idRoom}/img/{idImg}/users/{idUser}")
+	public void  deleteImg(@PathVariable Integer idRoom, @PathVariable Integer idImg
+			,HttpServletResponse response,@PathVariable Integer idUser) throws IOException
 	{
+		if (!repoUser.findById(idUser).get().isEmployed()) {
+			 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+			 return; 
+		}
 		if(repo.findById(idRoom).isEmpty())
 			throw new NoSuchElementException("Room to delete photo not found");
 		if(repoPhoto.findById(idImg).isEmpty())
