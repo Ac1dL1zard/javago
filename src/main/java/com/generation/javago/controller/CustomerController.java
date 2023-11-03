@@ -44,6 +44,13 @@ public class CustomerController
 	}
 	
 	
+	@GetMapping("customers/users/{id}")
+	public GenericCustomerDTO getByIdUser(@PathVariable Integer id) {
+		if(uRepo.findById(id).isEmpty())
+				throw new NoSuchElementException("User not found");
+		return new GenericCustomerDTO(cRepo.findByUser(uRepo.findById(id).get()).get()); 
+	}
+	
 	@GetMapping("customers/{id}")
 	public CustomerDTOFULL getById(@PathVariable Integer id) {
 		if(cRepo.findById(id).isEmpty())
