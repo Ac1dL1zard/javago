@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.generation.javago.auth.model.UserInDb;
+import com.generation.javago.auth.service.UserRepository;
+import com.generation.javago.controller.util.InvalidEntityException;
 import com.generation.javago.model.dto.roombooking.RoomBookingDTOFull;
 import com.generation.javago.model.dto.roombooking.RoomBookingDTOOnlyRoom;
-import com.generation.javago.model.dto.roombooking.RoomBookingDTORoomCustomer;
 import com.generation.javago.model.dto.roombooking.RoomBookingGenericDTO;
 import com.generation.javago.model.entity.Customer;
 import com.generation.javago.model.entity.Room;
@@ -35,25 +37,27 @@ public class RoomBookingController
 {
 	@Autowired
 	RoomRepository roRepo; 
-	
 	@Autowired
 	RoomBookingRepository rbRepo;
 	@Autowired
 	CustomerRepository cuRepo;
 	@Autowired
 	SeasonRepository seRepo;
+	@Autowired
+	UserRepository usRepo; 
+
 	
-	@GetMapping("bookings/{id}")
-	public List<RoomBookingDTOFull> getAll(@PathVariable Integer id)
+	@GetMapping("bookings/user/{idUser}")
+	public List<RoomBookingDTOFull> getAll(@PathVariable Integer idUser)
 	{
-		Customer current = cuRepo.findById(id).get();
+		UserInDb current = usRepo.findById(idUser).get();
 		
 		List<RoomBookingDTOFull> bookingsDTO = rbRepo.findAll()
 				.stream()
 				.map(booking -> new RoomBookingDTOFull(booking))
 				.toList();
 		
-		if(!current.getUser().isEmployed())
+		if(!current.isEmployed())
 		{
 			
 			
@@ -61,7 +65,7 @@ public class RoomBookingController
 			
 			for(RoomBookingDTOFull customerBooking : bookingsDTO)
 			{
-				if(customerBooking.getCustomerDTO().convertToCustomer().getId() == id)
+				if(customerBooking.getCustomerDTO().convertToCustomer().getId() == idUser)
 					res.add(customerBooking);
 			}
 				return res;
@@ -70,7 +74,7 @@ public class RoomBookingController
 		return bookingsDTO;
 	}
 	
-	@GetMapping("bookings/{idBooking}/{idCustomer}")
+	@GetMapping("bookings/{idBooking}/customers/{idCustomer}")
 	public RoomBookingGenericDTO getOneBooking(@PathVariable Integer idBooking,@PathVariable Integer idCustomer) 
 	{
 		Customer current = cuRepo.findById(idCustomer).get();
@@ -102,7 +106,9 @@ public class RoomBookingController
 		Room room= roRepo.findById(idRoom).get(); 
 		
 	
-		RoomBooking booking = dto.convertToRoomBooking();		
+		RoomBooking booking = dto.convertToRoomBooking();	
+		if(!booking.isValid())
+			throw new InvalidEntityException("Invalid Booking data");
 		
 		booking.setRoom(room); 
 		
@@ -111,6 +117,14 @@ public class RoomBookingController
 		booking.setBookingSeasons(seRepo.findAll());
 		
 		booking.setPrice(); 
+		
+		List<RoomBooking> allBookings= rbRepo.findByRoom(room); 
+		
+		
+		for(RoomBooking bookingDB : allBookings) {
+			if(booking.isBooked(bookingDB.getDaysOfBookings()))
+				throw new InvalidEntityException("Date NON valide, questa stanza e già prenotata nei giorni inseriti");
+		}
 		
 		RoomBookingDTOFull res= new RoomBookingDTOFull(rbRepo.save(booking)); 
 				
