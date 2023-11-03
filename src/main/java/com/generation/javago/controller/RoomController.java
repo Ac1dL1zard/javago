@@ -2,6 +2,8 @@ package com.generation.javago.controller;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -124,6 +126,21 @@ public class RoomController
 		repoPhoto.delete(photo); 
 	}
 	
-	
+	@GetMapping("rooms/img")
+	public List<GenericPhotoDTO> getAllImg(){
+		return repoPhoto.findAll().stream().map(photo -> new GenericPhotoDTO(photo)).toList(); 
+	}
+	@GetMapping("rooms/{id}/img")
+	public Set<GenericPhotoDTO> getAllImgOfaRoom(@PathVariable Integer id){
+		
+		if (repo.findById(id).isEmpty())
+			throw new NoSuchElementException("Room not found");
+		Room room= repo.findById(id).get(); 
+		
+		 return room.getPhotos().stream()
+			        .map(photo -> new GenericPhotoDTO(photo))
+			        .collect(Collectors.toSet());
+		
+	}
 		
 }
