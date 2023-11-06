@@ -48,6 +48,8 @@ public class RoomBookingController
 	UserRepository usRepo; 
 
 	
+	
+	
 	@GetMapping("bookings/user/{idUser}")
 	public List<?> getAll(@PathVariable Integer idUser)
 	{
