@@ -1,6 +1,8 @@
 package com.generation.javago.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -24,9 +26,12 @@ import com.generation.javago.controller.util.InvalidEntityException;
 import com.generation.javago.model.dto.photo.GenericPhotoDTO;
 import com.generation.javago.model.dto.room.GenericRoomDTO;
 import com.generation.javago.model.dto.room.RoomDTOFull;
+import com.generation.javago.model.dto.roombooking.RoomBookingGenericDTO;
 import com.generation.javago.model.entity.Photo;
 import com.generation.javago.model.entity.Room;
+import com.generation.javago.model.entity.RoomBooking;
 import com.generation.javago.model.repostiory.PhotoRepository;
+import com.generation.javago.model.repostiory.RoomBookingRepository;
 import com.generation.javago.model.repostiory.RoomRepository;
 
 @CrossOrigin
@@ -42,6 +47,31 @@ public class RoomController
 	
 	@Autowired
 	UserRepository repoUser; 
+	
+	@Autowired
+	RoomBookingRepository repoBookings; 
+	
+	@GetMapping("rooms/avaible")
+	public List<GenericRoomDTO> getAllBeetweenDate(@RequestBody RoomBookingGenericDTO booking){
+		LocalDate checkin_date=booking.getCheckin_date(), checkout_date= booking.getCheckout_date(); 
+		List<LocalDate> dateList = new ArrayList<>();
+		LocalDate currentDate = checkin_date;
+
+		while (!currentDate.isAfter(checkout_date)) {
+		    dateList.add(currentDate);
+		    currentDate = currentDate.plusDays(1);
+		}   
+		List<RoomBooking> allBookings= repoBookings.findAll();
+		
+		List<Room> allRoom= repo.findAll(); 
+		
+		for (RoomBooking singleBooking : allBookings) {
+			if(singleBooking.isBooked(dateList))
+				allRoom.remove(singleBooking.getRoom()); 
+		}
+		return allRoom.stream().map(room -> new  GenericRoomDTO(room)).toList(); 
+
+	}
 	
 	
 	@GetMapping("rooms")

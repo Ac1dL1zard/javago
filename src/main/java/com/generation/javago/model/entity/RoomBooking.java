@@ -63,8 +63,6 @@ public class RoomBooking extends BaseEntity
 			errors.add("Missing or invalid value for field 'checkin_date'");
 		if(checkout_date==null || checkout_date.isBefore(checkin_date))
 			errors.add("Missing or invalid value for field 'checkout_date'");
-		if(n_guest==null || n_guest<=0)
-			errors.add("Missing or invalid value for field 'n_guest'");
 		
 		return errors;
 	}
