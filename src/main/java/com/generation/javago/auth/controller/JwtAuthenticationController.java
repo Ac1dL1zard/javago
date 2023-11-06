@@ -58,7 +58,9 @@ public class JwtAuthenticationController {
 		
 		final Integer user_id = repo.findByUsername(authenticationRequest.getUsername()).get().getId();
 		
-		return ResponseEntity.ok(new JwtResponse(token,user_id)) ;
+		final boolean employed = repo.findByUsername(authenticationRequest.getUsername()).get().isEmployed();
+		
+		return ResponseEntity.ok(new JwtResponse(token,user_id,employed)) ;
 	}
 	
 	
@@ -81,7 +83,7 @@ public class JwtAuthenticationController {
 				.loadUserByUsername(user.getUsername());
 		final String token = jwtTokenUtil.generateToken(userDetails);
 
-		return ResponseEntity.ok(new JwtResponse(token,user.getId()));
+		return ResponseEntity.ok(new JwtResponse(token,user.getId(),user.isEmployed()));
 	}
 
 	private void authenticate(String username, String password) throws Exception {
