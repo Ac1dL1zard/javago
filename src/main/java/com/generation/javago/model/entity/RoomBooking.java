@@ -185,12 +185,13 @@ public class RoomBooking extends BaseEntity
 	}
 	
 	public boolean isBooked(List<LocalDate> lista) {
-		for (LocalDate data : getDaysOfBookings()) {
-            if (lista.contains(data)) {
-                return true; // Trovata una data in comune
-            }
-        }
-        return false;
-		
+	    for (LocalDate data : getDaysOfBookings()) {
+	        for (LocalDate checkDate : lista) {
+	            if (data.isEqual(checkDate)) {
+	                return true; // Trovata una data in comune
+	            }
+	        }
+	    }
+	    return false;
 	}
 }

@@ -51,7 +51,7 @@ public class RoomController
 	@Autowired
 	RoomBookingRepository repoBookings; 
 	
-	@GetMapping("rooms/available")
+	@PostMapping("rooms/available")
 	public List<GenericRoomDTO> getAllBeetweenDate(@RequestBody RoomBookingGenericDTO booking){
 		LocalDate checkin_date=booking.getCheckin_date(), checkout_date= booking.getCheckout_date(); 
 		List<LocalDate> dateList = new ArrayList<>();
