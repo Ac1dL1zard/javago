@@ -59,7 +59,8 @@ public class RoomBookingController
 		
 		if(!current.isEmployed())
 		{
-			List<RoomBookingGenericDTO> bookingsDTO = rbRepo.findAll()
+			
+			List<RoomBookingGenericDTO> bookingsDTO = rbRepo.findByCustomer(cuRepo.findByUser(current).get()) 
 					.stream()
 					.map(booking -> new RoomBookingGenericDTO(booking))
 					.toList();
@@ -86,7 +87,6 @@ public class RoomBookingController
 		
 		if(bookingBox.isEmpty())
 			throw new NoSuchElementException("Non ho trovato nessun elemento con quell'id");
-		
 		
 		return new RoomBookingDTOFull(booking);
 	}
