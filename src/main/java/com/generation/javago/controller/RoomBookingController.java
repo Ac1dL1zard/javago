@@ -148,7 +148,7 @@ public class RoomBookingController
 	}
 	
 	@PutMapping("bookings/{id}")
-	public RoomBookingGenericDTO modifyBooking(@PathVariable Integer id, @RequestBody RoomBookingGenericDTO dto)
+	public RoomBookingGenericDTO modifyBooking(@PathVariable Integer id, @RequestBody RoomBookingDTOFull dto)
 	{
 		Optional<RoomBooking> bo = rbRepo.findById(id);
 		if(bo.isEmpty())
@@ -166,8 +166,10 @@ public class RoomBookingController
 	
 		if (!modified.isValid())
 			throw new InvalidEntityException("Invalid booking data");
-		modified.setSeasons(seRepo.findAll()); 
-		modified.setRoom(room); 
+		
+//		modified.setCustomer(cuRepo.findById(dto.getCustomerDTO().getId()).get());
+//		modified.setSeasons(seRepo.findAll()); 
+//		modified.setRoom(room); 
 		modified.setPrice(); 
 		List<RoomBooking> allBookings= rbRepo.findByRoom(room); 
 		allBookings.remove(bo.get()); 
@@ -179,7 +181,7 @@ public class RoomBookingController
 		
 		
 		
-		return new RoomBookingGenericDTO(rbRepo.save(modified));
+		return new RoomBookingDTOFull(rbRepo.save(modified));
 	}
 	
 	@DeleteMapping("bookings/{id}")

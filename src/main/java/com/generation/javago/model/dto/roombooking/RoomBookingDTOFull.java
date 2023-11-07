@@ -9,11 +9,13 @@ import com.generation.javago.model.entity.RoomBooking;
 import com.generation.javago.model.entity.Season;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class RoomBookingDTOFull extends RoomBookingGenericDTO
 {
 	GenericCustomerDTO customerDTO;
