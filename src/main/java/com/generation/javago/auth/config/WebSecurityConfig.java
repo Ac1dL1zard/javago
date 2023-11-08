@@ -60,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.authorizeRequests().antMatchers("/authenticate").permitAll().and()
 		.authorizeRequests().antMatchers("/api/rooms").permitAll().and()//rooms
 		.authorizeRequests().antMatchers("/api/rooms/img").permitAll().and()
+		.authorizeRequests().antMatchers("/api/seasons").permitAll().and()
 		.authorizeRequests().antMatchers("/register").permitAll().
 		// all other requests need to be authenticated
 		anyRequest().authenticated().and().
